@@ -1,0 +1,97 @@
+/* ---------------------------------------------------------
+   BÀI 1: HƯỚNG DẪN TẠO CƠ SỞ DỮ LIỆU VÀ BẢNG
+   ---------------------------------------------------------
+   Mục tiêu: Giúp người mới tạo được 1 Database quản lý Sinh viên.
+*/
+
+-- BƯỚC 1: Tạo Database (Cái thùng chứa lớn nhất)
+CREATE DATABASE QuanLyLopHoc;
+USE QuanLyLopHoc;
+
+-- Nếu cái này đã tồn tại thì làm như sau;
+CREATE DATABASE IF NOT EXISTS QuanLyLopHoc; -- Giúp cho cái bảng không bị lỗi
+USE QuanLyLopHoc;
+----------------------------------------------------------
+-- BƯỚC 2: Tạo bảng; là bước xây nhà và có các cột bên trong đó
+CREATE TABLE tên_bảng
+vd tạo một tên bảng và SinhVien; có 3 cột ID, tên và tuổi
+CREATE TABLE SinhVien (
+    ID int,              --- int là kiểu số nguyên
+    HoTen varchar (255),   -- varchar là kiểu văn bản
+    Tuoi int
+);
+
+==========================================================================
+BÀI TẬP 2: INSERT INTO ten_bang (ten_cot1, ten_cot2,..) VALUES DỮ LIỆU
+Mục tiêu: Thêm 3 sinh viên mẫu vào bảng vừa tạo để kiểm tra.
+==========================================================================
+SQL: INSERT INTO SinhVien (ID, HoTen, Tuoi) VALUES
+      (1, 'A LANG HAO',18);
+
+
+
+      /* =============================================================
+DỰ ÁN: QUẢN LÝ QUÁN COFFEE (NHA COFFEE)
+Mục tiêu: Hướng dẫn tạo bảng, chèn dữ liệu và truy vấn cơ bản.
+=============================================================
+*/
+
+-- 1. KHỞI TẠO DATABASE
+CREATE DATABASE IF NOT EXISTS NhaCoffeeDB;
+USE NhaCoffeeDB;
+
+-- 2. TẠO BẢNG THỰC ĐƠN (Menu)
+-- Lưu trữ tên món, loại (Cafe/Trà/Bánh) và giá tiền.
+DROP TABLE IF EXISTS Menu;
+CREATE TABLE Menu (
+    id_mon INT PRIMARY KEY AUTO_INCREMENT,
+    ten_mon VARCHAR(100) NOT NULL,
+    loai VARCHAR(50),           -- Ví dụ: 'Do uong', 'Thuc an'
+    gia_tien DECIMAL(10, 2)     -- DECIMAL dùng cho tiền tệ để chính xác
+);
+
+-- 3. TẠO BẢNG KHÁCH HÀNG (Customers)
+-- Lưu thông tin để tích điểm.
+DROP TABLE IF EXISTS KhachHang;
+CREATE TABLE KhachHang (
+    id_khach INT PRIMARY KEY AUTO_INCREMENT,
+    ho_ten VARCHAR(100) NOT NULL,
+    so_dien_thoai VARCHAR(15) UNIQUE,
+    diem_tich_luy INT DEFAULT 0
+);
+
+-- 4. TẠO BẢNG ĐƠN HÀNG (Orders)
+-- Lưu vết mỗi lần bán hàng.
+DROP TABLE IF EXISTS DonHang;
+CREATE TABLE DonHang (
+    id_don INT PRIMARY KEY AUTO_INCREMENT,
+    id_khach INT,
+    ngay_dat DATETIME DEFAULT CURRENT_TIMESTAMP,
+    tong_tien DECIMAL(10, 2),
+    FOREIGN KEY (id_khach) REFERENCES KhachHang(id_khach) -- Liên kết với bảng Khách
+);
+
+/* =============================================================
+BÀI TẬP THỰC HÀNH: CHÈN DỮ LIỆU (INSERT)
+Hãy copy đoạn dưới đây để nạp "linh hồn" cho quán Coffee của bạn.
+=============================================================
+*/
+
+-- Chèn món ăn/uống vào Menu
+INSERT INTO Menu (ten_mon, loai, gia_tien) VALUES 
+('Bac Xiu', 'Cafe', 29000),
+('Tra Dao Cam Sa', 'Tra', 45000),
+('Banh Mì Pate', 'Thuc an', 35000),
+('Cafe Den Da', 'Cafe', 25000);
+
+-- Chèn khách hàng thân thiết
+INSERT INTO KhachHang (ho_ten, so_dien_thoai, diem_tich_luy) VALUES 
+('Nguyen Van Hao', '0901234567', 100),
+('Le Thi Binh', '0988777666', 50);
+
+-- Chèn một đơn hàng mẫu (Hào mua trà đào)
+INSERT INTO DonHang (id_khach, tong_tien) VALUES (1, 45000);
+
+-- 5. KIỂM TRA DỮ LIỆU
+-- Lệnh này giúp bạn xem toàn bộ Menu của quán
+SELECT * FROM Menu;
